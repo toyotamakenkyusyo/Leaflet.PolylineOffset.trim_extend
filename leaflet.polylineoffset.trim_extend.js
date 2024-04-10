@@ -65,7 +65,7 @@ L.PolylineOffset.trim_extend = function(pts, options) {
 	}
 	
     return c_out_pts;
-},
+}
 
 L.PolylineOffset.add_point = function(pts, options) {
 	if (options.start_add_x !== 0 && options.start_add_y !== 0) {
