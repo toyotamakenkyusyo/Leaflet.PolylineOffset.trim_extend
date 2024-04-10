@@ -68,6 +68,8 @@ async function f_input_geojson(a) {
 		}
 		
 		c_feature["properties"]["end_extend"] = 0;
+		c_feature["properties"]["end_add_x"] = 0;
+		c_feature["properties"]["end_add_y"] = 0;
 		if (c_post_feature !== undefined) {
 			c_end_angle_difference = c_post_feature["properties"]["start_angle"] - c_feature["properties"]["end_angle"];
 			if (Math.abs(c_end_angle_difference) < Math.PI / 8 || 15 * Math.PI / 8 < Math.abs(c_end_angle_difference)) {
