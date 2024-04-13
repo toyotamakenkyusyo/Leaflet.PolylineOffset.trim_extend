@@ -76,3 +76,62 @@ L.PolylineOffset.add_point = function(pts, options) {
 	}
 	return pts;
 };
+
+// Leaflet.PolylineDecorator対応
+if (L.PolylineDecorator !== undefined) {
+	const isCoordArray = function (a1) {
+		if (Array.isArray(a1) === false) {
+			return false; // 配列でない
+		}
+		for (let i1 = 0; i1 < a1.length; i1++) {
+			if (a1[i1] instanceof L.LatLng) {
+				continue;
+			}
+			if (Array.isArray(a1[i1]) && a1[i1].length === 2 && typeof a1[i1][0] === "number" && typeof a1[i1][1] === "number") {
+				continue;
+			}
+			return false; // 座標でない
+		}
+		return true;
+	};
+	
+	L.PolylineDecorator.prototype._initPaths = function(input, isPolygon) {
+		if (isCoordArray(input)) {
+			if (isPolygon) {
+				return [L.polyline(input.concat([input[0]]))];
+			} else {
+				return [L.polyline(input)];
+			}
+		}
+		if (input instanceof L.Polyline) {
+			return [input];
+		}
+		if (Array.isArray(input)) {
+			const c_output = [];
+			for (let i1 = 0; i1 < input.length; i1++) {
+				c_output.push(this._initPaths(input[i1], isPolygon));
+			}
+			return c_output;
+		}
+		return [];
+	};
+	
+	L.PolylineDecorator.prototype._initBounds = function() {
+		const allPathCoords = this._paths.reduce((acc, path) => acc.concat(path.getLatLngs()), []);
+		return L.latLngBounds(allPathCoords);
+	};
+	
+	L.PolylineDecorator.prototype._getPatternLayers = function(pattern) {
+		const mapBounds = this._map.getBounds().pad(0.1);
+		return this._paths.map(path => {
+			let l_LatLngs = path.getLatLngs();
+			if (path.options.offset) {
+				let l_ring = l_LatLngs.map(latLng => this._map.latLngToLayerPoint(latLng)); // 座標変換
+				l_ring = L.PolylineOffset.offsetPoints(l_ring, path.options);
+				l_LatLngs = l_ring.map(point => this._map.layerPointToLatLng(point)); // 座標変換
+			}
+			const directionPoints = this._getDirectionPoints(l_LatLngs, pattern).filter(point => mapBounds.contains(point.latLng));
+			return L.featureGroup(this._buildSymbols(l_LatLngs, pattern.symbolFactory, directionPoints));
+		});
+	};
+}
