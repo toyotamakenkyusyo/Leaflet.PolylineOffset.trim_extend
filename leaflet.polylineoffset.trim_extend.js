@@ -1,14 +1,14 @@
 L.PolylineOffset.offsetPoints = function(pts, options) {
-    var offsetSegments = L.PolylineOffset.offsetPointLine(L.LineUtil.simplify(pts, options.smoothFactor), options.offset);
-    let ring = L.PolylineOffset.joinLineSegments(offsetSegments, options.offset);
-    
-    if (0 < ring.length && options.start_trim !== undefined && options.end_extend !== undefined) {
-    	ring = L.PolylineOffset.trim_extend(ring, options);
-    }
-    if (0 < ring.length && options.start_add_x !== undefined && options.start_add_y !== undefined && options.end_add_x !== undefined && options.end_add_y !== undefined) {
-    	ring = L.PolylineOffset.add_point(ring, options);
-    }
-    return ring;
+	var offsetSegments = L.PolylineOffset.offsetPointLine(L.LineUtil.simplify(pts, options.smoothFactor), options.offset);
+	let ring = L.PolylineOffset.joinLineSegments(offsetSegments, options.offset);
+	
+	if (0 < ring.length && options.start_trim !== undefined && options.end_extend !== undefined) {
+		ring = L.PolylineOffset.trim_extend(ring, options);
+	}
+	if (0 < ring.length && options.start_add_x !== undefined && options.start_add_y !== undefined && options.end_add_x !== undefined && options.end_add_y !== undefined) {
+		ring = L.PolylineOffset.add_point(ring, options);
+	}
+	return ring;
 };
 
 
@@ -20,11 +20,11 @@ L.PolylineOffset.trim_extend = function(pts, options) {
 	}
 	
 	// 最初と最後の点を移動
-    pts[0].x += options.start_trim * (pts[1].x - pts[0].x) / c_segment_length_array[0];
-    pts[0].y += options.start_trim * (pts[1].y - pts[0].y) / c_segment_length_array[0];
-    pts[pts.length - 1].x += options.end_extend * (pts[pts.length - 1].x - pts[pts.length - 2].x) / c_segment_length_array[c_segment_length_array.length - 1];
-    pts[pts.length - 1].y += options.end_extend * (pts[pts.length - 1].y - pts[pts.length - 2].y) / c_segment_length_array[c_segment_length_array.length - 1];
-    
+	pts[0].x += options.start_trim * (pts[1].x - pts[0].x) / c_segment_length_array[0];
+	pts[0].y += options.start_trim * (pts[1].y - pts[0].y) / c_segment_length_array[0];
+	pts[pts.length - 1].x += options.end_extend * (pts[pts.length - 1].x - pts[pts.length - 2].x) / c_segment_length_array[c_segment_length_array.length - 1];
+	pts[pts.length - 1].y += options.end_extend * (pts[pts.length - 1].y - pts[pts.length - 2].y) / c_segment_length_array[c_segment_length_array.length - 1];
+	
 	// 途中の余計な点を削除
 	let l_total_length = 0;
 	let l_start_trim_index = 0; // 残るうちの最初の点
@@ -64,7 +64,7 @@ L.PolylineOffset.trim_extend = function(pts, options) {
 		c_out_pts.push(pts[i1]);
 	}
 	
-    return c_out_pts;
+	return c_out_pts;
 };
 
 L.PolylineOffset.add_point = function(pts, options) {
@@ -74,5 +74,5 @@ L.PolylineOffset.add_point = function(pts, options) {
 	if (options.end_add_x !== 0 && options.end_add_y !== 0) {
 		pts.push({"x": pts[pts.length - 1].x + options.end_add_x, "y": pts[pts.length - 1].y + options.end_add_y});
 	}
-    return pts;
+	return pts;
 };
