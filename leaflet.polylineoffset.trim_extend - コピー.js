@@ -9,7 +9,7 @@ L.PolylineOffset.offsetPoints = function(pts, options) {
     	ring = L.PolylineOffset.add_point(ring, options);
     }
     return ring;
-};
+}
 
 
 L.PolylineOffset.trim_extend = function(pts, options) {
@@ -65,7 +65,7 @@ L.PolylineOffset.trim_extend = function(pts, options) {
 	}
 	
     return c_out_pts;
-};
+}
 
 L.PolylineOffset.add_point = function(pts, options) {
 	if (options.start_add_x !== 0 && options.start_add_y !== 0) {
@@ -75,4 +75,4 @@ L.PolylineOffset.add_point = function(pts, options) {
 		pts.push({"x": pts[pts.length - 1].x + options.end_add_x, "y": pts[pts.length - 1].y + options.end_add_y});
 	}
     return pts;
-};
+}
