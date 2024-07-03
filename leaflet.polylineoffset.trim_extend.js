@@ -128,6 +128,23 @@ if (L.PolylineDecorator !== undefined) {
 			if (path.options.offset) {
 				let l_ring = l_LatLngs.map(latLng => this._map.latLngToLayerPoint(latLng)); // 座標変換
 				l_ring = L.PolylineOffset.offsetPoints(l_ring, path.options);
+				
+				// 仮のエラー対策
+				let l_exist = false;
+				const c_temp_ring = [];
+				for (let i1 = 0; i1 < l_ring.length; i1++) {
+					if (isNaN(l_ring[i1]["x"]) || isNaN(l_ring[i1]["y"])) {
+						l_exist = true;
+					} else {
+						c_temp_ring.push(l_ring[i1]);
+					}
+				}
+				if (l_exist === true) {
+					console.log("NaN出現");
+					console.log(l_ring);
+				}
+				l_ring = c_temp_ring;
+				
 				l_LatLngs = l_ring.map(point => this._map.layerPointToLatLng(point)); // 座標変換
 			}
 			const directionPoints = this._getDirectionPoints(l_LatLngs, pattern).filter(point => mapBounds.contains(point.latLng));
