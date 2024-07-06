@@ -20,10 +20,14 @@ L.PolylineOffset.trim_extend = function(pts, options) {
 	}
 	
 	// 最初と最後の点を移動
-	pts[0].x += options.start_trim * (pts[1].x - pts[0].x) / c_segment_length_array[0];
-	pts[0].y += options.start_trim * (pts[1].y - pts[0].y) / c_segment_length_array[0];
-	pts[pts.length - 1].x += options.end_extend * (pts[pts.length - 1].x - pts[pts.length - 2].x) / c_segment_length_array[c_segment_length_array.length - 1];
-	pts[pts.length - 1].y += options.end_extend * (pts[pts.length - 1].y - pts[pts.length - 2].y) / c_segment_length_array[c_segment_length_array.length - 1];
+	const c_x0 = pts[0].x + options.start_trim * (pts[1].x - pts[0].x) / c_segment_length_array[0];
+	const c_y0 = pts[0].y + options.start_trim * (pts[1].y - pts[0].y) / c_segment_length_array[0];
+	const c_x1 = pts[pts.length - 1].x + options.end_extend * (pts[pts.length - 1].x - pts[pts.length - 2].x) / c_segment_length_array[c_segment_length_array.length - 1];
+	const c_y1 = pts[pts.length - 1].y + options.end_extend * (pts[pts.length - 1].y - pts[pts.length - 2].y) / c_segment_length_array[c_segment_length_array.length - 1];
+	pts[0].x = c_x0;
+	pts[0].y = c_y0;
+	pts[pts.length - 1].x = c_x1;
+	pts[pts.length - 1].y = c_y1;
 	
 	// 途中の余計な点を削除
 	let l_total_length = 0;
